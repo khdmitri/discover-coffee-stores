@@ -1,11 +1,16 @@
-import styles from './page.module.css'
-import Banner from "@/components/banner";
+import styles from './page.module.css';
+import Banner from "../components/banner";
 
 export default function Home() {
+    async function clickOnBannerBtn() {
+        'use server'
+
+        console.log('Click on banner button')
+    }
+
     return (
         <main className={styles.main}>
-            <h1 className={styles.title}>Coffee connoisseur</h1>
-            <Banner/>
+            <Banner buttonText="View stores nearby" onClickBanner={clickOnBannerBtn} />
         </main>
     )
 }

@@ -7,13 +7,6 @@
   min-height: 100vh;
 }
 
-h1.title {
-  text-transform: uppercase;
-  color: #373b64;
-  font-size: xxx-large;
-  line-height: 1.15;
-}
-
 .description {
   display: inherit;
   justify-content: inherit;
