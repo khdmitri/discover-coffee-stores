@@ -1,5 +1,6 @@
 .container {
     margin-bottom: 6rem;
+    z-index: 5;
 }
 
 .title {
