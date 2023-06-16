@@ -108,6 +108,9 @@ button:focus {
 
 html,
 body {
+  padding: 0;
+  margin: 0;
+  font-family: var(--font-ibm-plex-sans);
   max-width: 100vw;
   overflow-x: hidden;
   background: url("/static/background.png");

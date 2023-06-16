@@ -1,8 +1,6 @@
 import './globals.css'
-import {Inter} from 'next/font/google'
 import styles from './layout.module.css'
-
-const inter = Inter({subsets: ['latin']})
+import {ibm_plex_sans} from "../app/fonts";
 
 export const metadata = {
     title: 'Coffee connoisseur',
@@ -12,7 +10,7 @@ export const metadata = {
 export default function RootLayout({children}) {
     return (
         <html lang="en">
-        <body className={inter.className}>
+        <body className={ibm_plex_sans.className}>
         <div className={styles.container}>
             {children}
             <footer>
