@@ -1,6 +1,11 @@
-import './globals.css'
-import styles from './layout.module.css'
-import {ibm_plex_sans} from "../app/fonts";
+import '../styles/globals.css';
+import styles from './layout.module.css';
+import { IBM_Plex_Sans } from "next/font/google";
+
+const ibm_plex_sans = IBM_Plex_Sans({
+    subsets: ['latin'],
+    weight: ['500', '600', '700']
+})
 
 export const metadata = {
     title: 'Coffee connoisseur',
