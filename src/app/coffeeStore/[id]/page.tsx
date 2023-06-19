@@ -1,23 +1,35 @@
 import Link from "next/link";
-import { Metadata, ResolvingMetadata } from 'next'
+import {Metadata, ResolvingMetadata} from 'next'
+import coffeeStoresData from "../../../data/coffee-stores.json"
+
+export const dynamicParams = true
 
 type Props = {
-  params: { id: string }
+    params: { id: string }
 }
 
 export async function generateMetadata(
-  { params }: Props,
-  parent?: ResolvingMetadata
+    {params}: Props,
+    parent?: ResolvingMetadata
 ): Promise<Metadata> {
-  // read route params
-  const id = params.id
+    // read route params
+    const id = params.id
+    const coffeeStore = coffeeStoresData.find(it => it.id === id)
 
-  return {
-    title: id
-  }
+    return {
+        title: coffeeStore ? coffeeStore : "Not found coffee store"
+    }
 }
 
-const CoffeeStore = ({params}: {id: string}) => {
+async function getCoffeeStore(params) {
+    return coffeeStoresData.find(it => it.id === params.id)
+}
+
+export async function generateStaticParams() {
+  return [{ id: '0' }, { id: '1' }]
+}
+
+const CoffeeStore = ({params}: { id: string }) => {
     console.log(`Params: ${params.id}`)
 
     return (
