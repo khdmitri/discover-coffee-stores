@@ -1,22 +1,73 @@
 'use client'
 
-import styles from './banner.module.css'
+import styles from './banner.module.css';
+import stylesParent from "../styles/Home.module.css";
+import useTrackLocation from "../hooks/use-track-location";
+import {useEffect, useState} from "react";
+import fetchCoffeeStores from "../lib/coffee-stores";
+import Card from "./card";
+
+const NEAR_BY_LIMIT = 9
 
 const Banner = (props) => {
+    const {handleTrackLocation, latLong, locationErrorMsg} = useTrackLocation()
+    const [coffeeStores, setCoffeeStores] = useState()
+    const [btnText, setBtnText] = useState("")
+    const [coffeeStoresError, setCoffeeStoresError] = useState(null)
+
+    console.log({latLong, locationErrorMsg})
+
     const onClickBannerBtn = async () => {
-        console.log(`Banner button clicked!`)
-        await props.onClickBanner()
+        setBtnText("Loading...")
+        handleTrackLocation()
     }
 
+    useEffect(() => {
+        try {
+            (async () => {
+                const fetchedCoffeeStores: Awaited<unknown> = await fetchCoffeeStores(latLong, NEAR_BY_LIMIT)
+                setCoffeeStores(fetchedCoffeeStores)
+                setBtnText(props.buttonText)
+            })()
+        } catch (error) {
+            console.log({error})
+            setCoffeeStoresError(error.message``)
+        }
+
+    }, [latLong])
+
+    useEffect(() => {
+        setBtnText(props.buttonText)
+    }, [])
+
     return (
-        <div className={styles.container}>
-            <h1 className={styles.title}><span className={styles.title1}>Coffee</span> <span
-                className={styles.title2}>connoisseur</span></h1>
-            <p className={styles.subTitle}>Discover your local coffee shops!</p>
-            <div className={styles.buttonWrapper}>
-                <button className={styles.button} onClick={onClickBannerBtn}>{props.buttonText}</button>
+        <>
+            <div className={styles.container}>
+                <h1 className={styles.title}><span className={styles.title1}>Coffee</span> <span
+                    className={styles.title2}>connoisseur</span></h1>
+                <p className={styles.subTitle}>Discover your local coffee shops!</p>
+                <div className={styles.buttonWrapper}>
+                    <button className={styles.button} onClick={onClickBannerBtn}>{btnText}</button>
+                </div>
             </div>
-        </div>
+            {coffeeStores &&
+                <>
+                    <h2 className={stylesParent.heading2}>Coffee stores near me</h2>
+                    <div className={stylesParent.cardLayout}>
+                        {coffeeStores.map(it => {
+                            return <Card name={it.name}
+                                         imgUrl={it.imgUrl}
+                                         href={`/coffeeStore/${it.fsq_id}`}
+                                         className={stylesParent.card}
+                                         key={it.fsq_id}
+                            />
+                        })}
+                    </div>
+                </>
+            }
+            {locationErrorMsg && <p>Something went wrong: {locationErrorMsg}</p>}
+            {coffeeStoresError && <p>Something went wrong: {coffeeStoresError}</p>}
+        </>
     );
 };
 

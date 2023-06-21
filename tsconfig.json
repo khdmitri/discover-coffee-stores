@@ -27,7 +27,8 @@
     "next-env.d.ts",
     ".next/types/**/*.ts",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "../../../Program Files/JetBrains/PyCharm 2022.2/plugins/JavaScriptLanguage/jsLanguageServicesImpl/external/lib.es2015.core.d.ts"
   ],
   "exclude": [
     "node_modules"

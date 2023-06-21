@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import styles from './layout.module.css';
-import { IBM_Plex_Sans } from "next/font/google";
+import {IBM_Plex_Sans} from "next/font/google";
+import StoreProvider from "./store-provider";
 
 const ibm_plex_sans = IBM_Plex_Sans({
     subsets: ['latin'],
@@ -17,7 +18,9 @@ export default function RootLayout({children}) {
         <html lang="en">
         <body className={ibm_plex_sans.className}>
         <div className={styles.container}>
-            {children}
+            <StoreProvider>
+                {children}
+            </StoreProvider>
             <footer>
 
             </footer>

@@ -25,7 +25,7 @@ function CardContent({name, imgUrl}) {
 }
 
 const Card = (props: propType) => {
-    console.log("Props", props)
+    // console.log("Props", props)
     return (
         <Link href={props.href} className={styles.cardLink}>
             <CardContent name={props.name} imgUrl={props.imgUrl}/>
