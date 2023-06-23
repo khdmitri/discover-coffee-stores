@@ -1,10 +1,10 @@
 import Link from "next/link";
-import {Metadata, ResolvingMetadata} from 'next'
+import type {Metadata} from 'next'
 import styles from "../../../styles/coffee-store.module.css";
 import Image from "next/image";
-import cls from "classnames";
-import Upvote from "../../../components/upvote";
+import CoffeeStoreContent from "../../../components/coffee-store-content";
 import fetchCoffeeStores from "../../../lib/coffee-stores";
+import CsCoffeeStore from "../../../components/cs-coffee-store";
 
 export const dynamicParams = true
 
@@ -12,23 +12,13 @@ type Props = {
     params: { id: string }
 }
 
-export async function generateMetadata(
-    {params}: Props,
-    parent?: ResolvingMetadata
-): Promise<Metadata> {
-    // read route params
-    const id = params.id
-    const coffeeStoresData = await fetchCoffeeStores()
-    const coffeeStore = await coffeeStoresData.find(it => it.fsq_id.toString() === id)
-
-    return {
-        title: coffeeStore ? coffeeStore.name : "Not found coffee store"
-    }
+export const metadata: Metadata = {
+    title: "Coffee Store Details"
 }
 
 async function getCoffeeStore(params) {
     const coffeeStoresData = await fetchCoffeeStores()
-    const coffeeStore = coffeeStoresData.find(it => it.fsq_id.toString() === params.id);
+    const coffeeStore = coffeeStoresData.find(it => it.fsq_id.toString() === params.id)
     return coffeeStore ? coffeeStore : {}
 }
 
@@ -42,6 +32,7 @@ export async function generateStaticParams() {
 const CoffeeStore = async ({params}: Props) => {
     const coffeeStore = await getCoffeeStore(params)
     console.log("Prams", params)
+    console.log("CoffeeStore", coffeeStore)
 
     if (!coffeeStore)
         return <div>Loading...</div>
@@ -66,25 +57,10 @@ const CoffeeStore = async ({params}: Props) => {
                         />
                     </div>
                 </div>
-                <div className={cls("glass", styles.col2)}>
-                    {coffeeStore.location &&
-                        <div className={styles.iconWrapper}>
-                            <Image src="/static/icons/places.svg" alt="Icon" width={24} height={24}/>
-                            <p className={styles.text}>{coffeeStore.location.address}</p>
-                        </div>
-                    }
-                    {coffeeStore.categories &&
-                        <div className={styles.iconWrapper}>
-                            <Image src="/static/icons/nearMe.svg" alt="Icon" width={24} height={24}/>
-                            <p className={styles.text}>{coffeeStore.categories[0] ? coffeeStore.categories[0].name : ""}</p>
-                        </div>
-                    }
-                    <div className={styles.iconWrapper}>
-                        <Image src="/static/icons/star.svg" alt="Icon" width={24} height={24}/>
-                        <p className={styles.text}>1</p>
-                    </div>
-                    <Upvote/>
-                </div>
+                {coffeeStore && Object.keys(coffeeStore).length > 0 ?
+                    <CoffeeStoreContent coffeeStore={coffeeStore}/> :
+                    <CsCoffeeStore id={params.id} coffeeStore={coffeeStore}/>
+                }
             </div>
         </div>
     )

@@ -38,7 +38,7 @@ const fetchCoffeeStores = async (latLong='54.290324,48.306482', limit=ITEMS_LIMI
 // .catch(err => console.error(err));
     return await Promise.all(data.results.map(async result => {
         const photo = await getCoffeeStorePhoto(result.name)
-        console.log("photo", photo)
+        // console.log("photo", photo)
         return {
             ...result,
             imgUrl: photo && Array.isArray(photo) ? photo[0] : DEFAULT_IMAGE

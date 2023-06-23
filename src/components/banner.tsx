@@ -3,19 +3,18 @@
 import styles from './banner.module.css';
 import stylesParent from "../styles/Home.module.css";
 import useTrackLocation from "../hooks/use-track-location";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import fetchCoffeeStores from "../lib/coffee-stores";
 import Card from "./card";
+import {ACTION_TYPES, StoreContext} from "../app/store-provider";
 
 const NEAR_BY_LIMIT = 9
 
 const Banner = (props) => {
-    const {handleTrackLocation, latLong, locationErrorMsg} = useTrackLocation()
-    const [coffeeStores, setCoffeeStores] = useState()
+    const {handleTrackLocation, locationErrorMsg} = useTrackLocation()
     const [btnText, setBtnText] = useState("")
     const [coffeeStoresError, setCoffeeStoresError] = useState(null)
-
-    console.log({latLong, locationErrorMsg})
+    const {state, dispatch} = useContext(StoreContext)
 
     const onClickBannerBtn = async () => {
         setBtnText("Loading...")
@@ -25,16 +24,19 @@ const Banner = (props) => {
     useEffect(() => {
         try {
             (async () => {
-                const fetchedCoffeeStores: Awaited<unknown> = await fetchCoffeeStores(latLong, NEAR_BY_LIMIT)
-                setCoffeeStores(fetchedCoffeeStores)
+                const fetchedCoffeeStores: Awaited<unknown> = await fetchCoffeeStores(state.latLong, NEAR_BY_LIMIT)
+                dispatch({
+                    type: ACTION_TYPES.SET_COFFEE_STORES,
+                    payload: {coffeeStores: fetchedCoffeeStores}
+                })
                 setBtnText(props.buttonText)
             })()
         } catch (error) {
             console.log({error})
-            setCoffeeStoresError(error.message``)
+            setCoffeeStoresError(error.message)
         }
 
-    }, [latLong])
+    }, [state.latLong])
 
     useEffect(() => {
         setBtnText(props.buttonText)
@@ -50,11 +52,11 @@ const Banner = (props) => {
                     <button className={styles.button} onClick={onClickBannerBtn}>{btnText}</button>
                 </div>
             </div>
-            {coffeeStores &&
+            {state.coffeeStores &&
                 <>
                     <h2 className={stylesParent.heading2}>Coffee stores near me</h2>
                     <div className={stylesParent.cardLayout}>
-                        {coffeeStores.map(it => {
+                        {state.coffeeStores.map(it => {
                             return <Card name={it.name}
                                          imgUrl={it.imgUrl}
                                          href={`/coffeeStore/${it.fsq_id}`}

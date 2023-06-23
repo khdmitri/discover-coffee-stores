@@ -1,11 +1,19 @@
-import {useState} from "react";
+'use client'
+
+import {useContext, useState} from "react";
+import {ACTION_TYPES, StoreContext} from "../app/store-provider";
 
 const useTrackLocation = () => {
     const [locationErrorMsg, setLocationErrorMsg] = useState('')
-    const [latLong, setLatLong] = useState('')
+    const {dispatch} = useContext(StoreContext)
+    // const [latLong, setLatLong] = useState('')
 
     const success = (position) => {
-        setLatLong(`${position.coords.latitude},${position.coords.longitude}`)
+        // setLatLong(`${position.coords.latitude},${position.coords.longitude}`)
+        dispatch({
+            type: ACTION_TYPES.SET_LAT_LONG,
+            payload: {latLong: `${position.coords.latitude},${position.coords.longitude}`}
+        })
         setLocationErrorMsg('')
     }
 
@@ -22,7 +30,6 @@ const useTrackLocation = () => {
     }
 
     return {
-        latLong,
         handleTrackLocation,
         locationErrorMsg
     }
